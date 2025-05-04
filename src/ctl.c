@@ -149,7 +149,8 @@ static void *ctl_thread_main(void *data)
         ctl_slow_start(fp, &seconds);
     }
 
-    // ???
+    // 根据服务器配置文件的duration字段的值，计算得到count=10*60=600
+    // 即600s后循环退出
     for (i = 0; i < count; i++) {
         ctl_print_speed(fp, &seconds);
         if (g_stop) {
