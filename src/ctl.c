@@ -137,6 +137,9 @@ static void *ctl_thread_main(void *data)
     cfg->duration += g_config.slow_start;
 
     fp = ctl_log_open(cfg);
+    // 根据ws结构体记录的状态，阻塞等待，直到所有ws都准备好
+    // 这里的ws是指所有的kni设备
+    // 也就是所有的kni都准备好，才开始工作
     work_space_wait_start();
     kni_link_up(cfg);
 
@@ -146,6 +149,7 @@ static void *ctl_thread_main(void *data)
         ctl_slow_start(fp, &seconds);
     }
 
+    // ???
     for (i = 0; i < count; i++) {
         ctl_print_speed(fp, &seconds);
         if (g_stop) {
@@ -153,6 +157,7 @@ static void *ctl_thread_main(void *data)
         }
     }
 
+    // 
     work_space_stop_all();
     for (i = 0; i < DELAY_SEC; i++) {
         ctl_print_speed(fp, &seconds);
