@@ -347,6 +347,8 @@ void port_clear(uint16_t port_id, uint16_t queue_id)
     struct rte_mbuf *m = NULL;
 
     for (i = 0; i < NB_RXD; i++) {
+        //批量接收：rte_eth_rx_burst
+        //能够一次性从指定的以太网端口和队列中接收多个数据包，存储到用户提供的缓冲区数组中，显著提升数据包处理效率。
         ret = rte_eth_rx_burst(port_id, queue_id, &m, 1);
         if (ret) {
             mbuf_free(m);

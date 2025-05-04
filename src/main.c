@@ -39,6 +39,8 @@ static int lcore_main(__rte_unused void *arg1)
         printf("Error: work space init error\n");
         exit(-1);
     }
+
+    // 清空(接收)指定网络端口和队列
     port_clear(ws->port_id, ws->queue_id);
 
     if (neigh_check_gateway(ws) < 0) {
