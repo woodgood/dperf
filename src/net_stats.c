@@ -69,6 +69,7 @@ static void net_stats_format_print2(uint64_t val, char *buf, int len)
     }
 }
 
+// 将整数val按字符串格式化为字符串
 static void net_stats_format_print3(uint64_t val, char *buf, int len, int space, int err)
 {
     int i = 0;
@@ -95,6 +96,7 @@ static void net_stats_format_print3(uint64_t val, char *buf, int len, int space,
         return;
     }
 
+    // 使用空格补齐space长度
     p = buf + strlen(buf);
     last = buf + len - 1;
     for (i = 0; i < n; i++) {
@@ -481,11 +483,11 @@ static void net_stats_get_speed(struct net_stats *speed)
 
     // 计算当前网络的每个信息总和
     net_stats_sum(&sum);
-    // 当前网络信息减去上一次网络信息，即可得到网络速度
+    // 当前网络信息总和减去上一次网络信息总和，即可得到网络速度
     net_stats_del(speed, &sum, &g_net_stats_total);
-    // 用当前网络信息更新上一次网络信息
+    // 用当前网络信息总和更新上一次网络信息总和
     net_stats_assign(&g_net_stats_total, &sum);
-    
+    // 清空上一次网络信息总和终点cpu利用数
     net_stats_clear_mutable(&g_net_stats_total);
 }
 
@@ -520,7 +522,7 @@ static void net_stats_print_eth(FILE *fp)
     uint64_t imis = 0;
 
     config_for_each_port(&g_config, port) {
-        rte_eth_stats_get(port->id, &st);
+        rte_eth_stats_get(port->id, &st); // 获取指定以太网设备的统计信息
         ierr += st.ierrors;
         oerr += st.oerrors;
         imis += st.imissed;
@@ -561,12 +563,13 @@ void net_stats_print_speed(FILE *fp, int seconds)
 
     SNPRINTF(p, len, "\nseconds %-18lu", (uint64_t)seconds);
     net_stats_get_speed(&speed);
-    ret = net_stats_cpusage_print(p, len);
-    buf_skip(p, len, ret);
+    ret = net_stats_cpusage_print(p, len); // 打印每个net_stats的cpu利用数
+    buf_skip(p, len, ret); // 打印指针和长度进行偏移
 
-    ret = net_stats_print(&speed, p, len);
+    ret = net_stats_print(&speed, p, len); // 打印统计的网速
     buf_skip(p, len, ret);
-    net_stats_output(fp, g_net_stats_buf);
+    
+    net_stats_output(fp, g_net_stats_buf); // 将后台打印写入文件或打印到后台
     net_stats_print_eth(fp);
 
     if (fp) {
