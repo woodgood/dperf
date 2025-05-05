@@ -442,6 +442,7 @@ static void net_stats_del(struct net_stats *result, struct net_stats *s0, struct
 {
     int i = 0;
 
+    // 遍历net_stats对象中的成员变量，并赋值
     for (i = 0; i < NET_STATS_ELEMENTS_NUM; i++) {
         if (NET_STATS(s0, i) > NET_STATS(s1, i)) {
             NET_STATS(result, i) = NET_STATS(s0, i) - NET_STATS(s1, i);
@@ -478,9 +479,13 @@ static void net_stats_get_speed(struct net_stats *speed)
 {
     struct net_stats sum;
 
+    // 计算当前网络的每个信息总和
     net_stats_sum(&sum);
+    // 当前网络信息减去上一次网络信息，即可得到网络速度
     net_stats_del(speed, &sum, &g_net_stats_total);
+    // 用当前网络信息更新上一次网络信息
     net_stats_assign(&g_net_stats_total, &sum);
+    
     net_stats_clear_mutable(&g_net_stats_total);
 }
 
