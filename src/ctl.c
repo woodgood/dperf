@@ -151,6 +151,7 @@ static void *ctl_thread_main(void *data)
 
     // 根据服务器配置文件的duration字段的值，计算得到count=10*60=600
     // 即600s后循环退出
+    // seconds加1递增，即每次调用ctl_print_speed()时，seconds加1
     for (i = 0; i < count; i++) {
         ctl_print_speed(fp, &seconds);
         if (g_stop) {
