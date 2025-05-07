@@ -89,19 +89,19 @@ void mbuf_log(struct rte_mbuf *m, const char *tag)
             len = ntohs(iph->tot_len) - 20 - th->th_off * 4;
             fprintf(log, "sec %lu ticks %lu %s mbuf: "
                     " %s -> %s "
-                    IPV4_FMT ":%u -> " IPV4_FMT ":%u "
+                    IPV4_FMT ":%u -> " IPV4_FMT ":%u "  /* 第三行 */
                     "version %d ihl %d tos %x ttl %d frg_off %x ip.id %u "
-                    "syn %d fin %d push %d ack %d rst %d seq %u ack %u th_off %u iplen %d len = %d\n",
+                    "syn %d fin %d push %d ack %d rst %d seq %u ack %u "
+                    "th_off %u iplen %d len = %d\n",
                     g_current_seconds, g_current_ticks, tag,
                     smac, dmac,
-                    IPV4_STR(iph->saddr), ntohs(th->th_sport),
-                    IPV4_STR(iph->daddr), ntohs(th->th_dport),
+                    IPV4_STR(iph->saddr), ntohs(th->th_sport), IPV4_STR(iph->daddr), ntohs(th->th_dport), /* 第三行 */
                     iph->version, iph->ihl, iph->tos, iph->ttl,iph->frag_off, ntohs(iph->id),
-                    syn, fin, push, ack, rst,
-                    ntohl(th->th_seq), ntohl(th->th_ack),
+                    syn, fin, push, ack, rst, ntohl(th->th_seq), ntohl(th->th_ack),
                     th->th_off, ntohs(iph->tot_len), len);
         } else {
-            fprintf(log, "sec %lu ticks %lu %s muf: %s -> %s " IPV4_FMT " ->" IPV4_FMT " proto %u\n",
+            fprintf(log, "sec %lu ticks %lu %s "
+                "muf: %s -> %s " IPV4_FMT " ->" IPV4_FMT " proto %u\n",
                 g_current_seconds, g_current_ticks, tag,
                 smac, dmac, IPV4_STR(iph->saddr), IPV4_STR(iph->daddr), iph->protocol);
         }
