@@ -593,28 +593,28 @@ static int config_parse_port(int argc, char *argv[], void *data)
             printf("bad bond \"%s\"\n", argv[1]);
             return -1;
         }
-    } else if (strlen(argv[1]) == PCI_LEN) {
+    } else if (strlen(argv[1]) == PCI_LEN) { // 0000:02:06.0
         strcpy(port->pci, argv[1]);
         port->pci_num = 1;
     } else {
         return -1;
     }
 
-    if ((af_local = config_parse_ip(argv[2], &port->local_ip)) < 0) {
+    if ((af_local = config_parse_ip(argv[2], &port->local_ip)) < 0) { // 192.168.217.136
         return -1;
     }
 
-    if ((af_gateway = config_parse_ip(argv[3], &port->gateway_ip)) < 0) {
+    if ((af_gateway = config_parse_ip(argv[3], &port->gateway_ip)) < 0) { // 192.168.217.2
         return -1;
     }
 
-    if (af_local != af_gateway) {
+    if (af_local != af_gateway) { // IPåœ°å€åè®®ä¸åŒ
         return -1;
     }
     port->ipv6 = af_local == AF_INET6;
 
     if (argc == 5) {
-        if (eth_addr_init(&port->gateway_mac, argv[4]) != 0) {
+        if (eth_addr_init(&port->gateway_mac, argv[4]) != 0) { // ä½¿ç”¨argv[4]åˆå§‹åŒ–macåœ°å€
             return -1;
         }
     }
@@ -1892,7 +1892,7 @@ static int config_check_port(struct config *cfg)
             }
 
             if (config_check_port_pci(port0, port1) < 0) {
-                printf("duplicate pci\n");
+                printf("duplicate pci\n"); // é‡å¤çš„pciå­—ç¬¦ä¸²è®¾å¤‡
                 return -1;
             }
         }
@@ -2679,7 +2679,7 @@ int config_parse(int argc, char **argv, struct config *cfg)
     while ((opt = getopt_long_only(argc, argv, optstr, g_options, NULL)) != -1) {
         switch (opt) {
             case 'c':
-                // ¸ù¾İg_config_keywords±í£¬½âÎöÅäÖÃÎÄ¼ş¡£½«½âÎö½á¹¹ÉèÖÃµ½cfgÖĞ
+                // æ ¹æ®g_config_keywordsè¡¨ï¼Œè§£æé…ç½®æ–‡ä»¶ã€‚å°†è§£æç»“æ„è®¾ç½®åˆ°cfgä¸­
                 if (config_keyword_parse(optarg, g_config_keywords, cfg) < 0) {
                     return -1;
                 }
@@ -2752,7 +2752,7 @@ int config_parse(int argc, char **argv, struct config *cfg)
         return -1;
     }
 
-    // ¼ì²éslow_startÅäÖÃÊÇ·ñÓĞĞ§¡£Ã»ÓĞÉèÖÃÊ±£¬ÉèÖÃÎªÄ¬ÈÏÖµ
+    // æ£€æŸ¥slow_starté…ç½®æ˜¯å¦æœ‰æ•ˆã€‚æ²¡æœ‰è®¾ç½®æ—¶ï¼Œè®¾ç½®ä¸ºé»˜è®¤å€¼
     if (config_check_slow_start(cfg) < 0) {
         return -1;
     }
