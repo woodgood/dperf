@@ -162,6 +162,8 @@ int dpdk_init(struct config *cfg, char *argv0)
         return -1;
     }
 
+    // 初始化数据包捕获功能的函数
+    // rte_pdump 是 DPDK 提供的用于数据包捕获和转储的库，类似于 tcpdump 的功能
     rte_pdump_init();
 
     if (port_init_all(cfg) < 0) {
