@@ -2679,6 +2679,7 @@ int config_parse(int argc, char **argv, struct config *cfg)
     while ((opt = getopt_long_only(argc, argv, optstr, g_options, NULL)) != -1) {
         switch (opt) {
             case 'c':
+                // 根据g_config_keywords表，解析配置文件。将解析结构设置到cfg中
                 if (config_keyword_parse(optarg, g_config_keywords, cfg) < 0) {
                     return -1;
                 }
@@ -2751,6 +2752,7 @@ int config_parse(int argc, char **argv, struct config *cfg)
         return -1;
     }
 
+    // 检查slow_start配置是否有效。没有设置时，设置为默认值
     if (config_check_slow_start(cfg) < 0) {
         return -1;
     }
