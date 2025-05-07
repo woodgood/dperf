@@ -128,16 +128,25 @@ static int dpdk_eal_init(struct config *cfg, char *argv0)
     argc++;
 #endif
 
+    // argv的log_level字段
     sprintf(log_level, "--log-level=%d", cfg->log_level);
+
+    // argv的file_prefix字段
     if (dpdk_set_socket_mem(cfg, socket_mem, file_prefix) < 0) {
         printf("dpdk_set_socket_mem fail\n");
         return -1;
     }
 
+    // argv的lcores字段
     dpdk_set_lcores(cfg, lcores);
+
+    // 将flag_pci写入argv中
     argc += dpdk_append_pci(cfg, argc, argv, flag_pci);
 
     dpdk_set_simd_bitwidth(cfg);
+    
+    // rte_eal_init通过解析命令行参数、初始化内存管理、配置线程模型、设置进程间通信、处理中断信号
+    // 以及初始化设备与总线，为DPDK应用程序构建了一个高性能、低延迟的运行环境
     if (rte_eal_init(argc, argv) < 0) {
         printf("rte_eal_init fail\n");
         return -1;
