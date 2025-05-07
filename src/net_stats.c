@@ -115,7 +115,7 @@ static void net_stats_format_print3(uint64_t val, char *buf, int len, int space,
 }
 
 #define net_stats_format_print(val, buf, len)           net_stats_format_print3(val, buf, len, 18, 0)
-#define net_stats_format_print_err(val, buf, len)       net_stats_format_print3(val, buf, len, 18, 1)
+#define net_stats_format_print_err(val, buf, len)       net_stats_format_print3(val, buf, len, 18, 1)  // err = 1时，彩色打印
 #define net_stats_format_print_short_err(val, buf, len) net_stats_format_print3(val, buf, len, 10, 1)
 
 #define SNPRINTF(p, len, fmt...) do {           \
