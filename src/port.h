@@ -101,6 +101,7 @@ struct rte_mempool *port_get_mbuf_pool(struct netif_port *p, int queue_id);
 
 static inline bool port_is_bond4(struct netif_port *port)
 {
+    // 动态链接聚合（802.3ad）：基于链路状态动态分配流量。
     return (port->bond && (port->bond_mode == 4));
 }
 
