@@ -168,6 +168,8 @@ static struct rte_kni *kni_alloc(struct config *cfg, struct netif_port *port)
         return NULL;
     }
 
+    // 用于创建内核网络接口（Kernel NIC Interface，KNI）的核心函数。
+    // KNI 允许 DPDK 应用程序与操作系统的网络协议栈进行交互，实现数据包在用户态和内核态之间的传递。
     kni = rte_kni_alloc(mbuf_pool, &conf, NULL);
 
     if (kni_set_hwaddr(cfg, port) < 0) {
