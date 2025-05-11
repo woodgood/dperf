@@ -132,7 +132,7 @@ static inline void work_space_tx_flush(struct work_space *ws)
     int i = 0;
     int n = 0;
     int num = 0;
-    struct tx_queue *queue = &ws->tx_queue;
+    struct tx_queue *queue = &ws->tx_queue;// 发送队列
     struct rte_mbuf **tx = NULL;
 
     if (queue->head == queue->tail) {
@@ -149,7 +149,7 @@ static inline void work_space_tx_flush(struct work_space *ws)
         // 批处理发送数据包：将多个数据包一次性发送到指定网卡的发送队列，减少函数调用开销，提升吞吐量。
         // 硬件加速支持：依赖网卡驱动的底层实现，通过DMA引擎直接将数据包从内存传输到网络，避免CPU拷贝开销。
         n = rte_eth_tx_burst(g_work_space->port_id, g_work_space->queue_id, tx, num);
-        queue->head += n;
+        queue->head += n;// 批量发生n个包
         if (queue->head == queue->tail) {
             queue->head = 0;
             queue->tail = 0;
@@ -159,6 +159,7 @@ static inline void work_space_tx_flush(struct work_space *ws)
         }
     }
 
+    // 发送队列中剩余包的个数，即丢包个数。需要手动释放
     num = queue->tail - queue->head;
     net_stats_tx_drop(num);
     for (i = queue->head; i < queue->tail; i++) {
