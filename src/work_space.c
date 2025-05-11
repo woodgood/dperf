@@ -241,6 +241,7 @@ struct work_space *work_space_new(struct config *cfg, int id)
         goto err;
     }
 
+    // 根据配置文件初始化tcp和udp接口
     if (tcp_init(ws) < 0) {
         printf("tcp_init error");
         goto err;
@@ -251,6 +252,8 @@ struct work_space *work_space_new(struct config *cfg, int id)
         goto err;
     }
 
+    // 用于初始化 LLDP（Link Layer Discovery Protocol，链路层发现协议）的核心函数，
+    // 其核心作用是启用并配置 LLDP 协议，使网络设备能够自动发现并交换链路层信息
     lldp_init(ws);
     if (work_space_open_log(ws) < 0) {
         goto err;
