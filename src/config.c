@@ -1711,8 +1711,8 @@ static int config_port_queue_num(struct config *cfg)
 
 struct netif_port *config_port_get(struct config *cfg, int thread_id, int *p_queue_id)
 {
-    int queue_num = config_port_queue_num(cfg);
-    int queue_id = thread_id % queue_num;
+    int queue_num = config_port_queue_num(cfg); // 例如:8核cpu，2个端口。则有8/2=4个队列
+    int queue_id = thread_id % queue_num;// 8个线程分配到4个队列的哪个队列id上
     int port_idx = thread_id / queue_num;
 
     if (p_queue_id) {

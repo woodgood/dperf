@@ -91,7 +91,9 @@ static void work_space_get_port(struct work_space *ws)
     struct netif_port *port = NULL;
     struct vxlan *vxlan = NULL;
 
+    // ws->id线程id
     port = config_port_get(cfg, ws->id, &queue_id);
+    // 工作空间对象，设置队列id、端口和端口id
     ws->queue_id = queue_id;
     ws->port = port;
     ws->port_id = port->id;
@@ -220,7 +222,7 @@ struct work_space *work_space_new(struct config *cfg, int id)
     g_work_space_all[id] = ws;
     ws->server = cfg->server;
     ws->vlan_id = cfg->vlan_id;
-    ws->id = id;
+    ws->id = id;// 线程id
     ws->ipv6 = cfg->af == AF_INET6;
     ws->http = cfg->http;
     ws->flood = cfg->flood;

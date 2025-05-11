@@ -33,7 +33,7 @@ static int lcore_main(__rte_unused void *arg1)
     int id = 0;
     struct work_space *ws = NULL;
 
-    id = rte_lcore_id();
+    id = rte_lcore_id();// 线程id 返回当前线程所绑定的逻辑核的 ID
     ws = work_space_new(&g_config, id);
     if (ws == NULL) {
         printf("Error: work space init error\n");
