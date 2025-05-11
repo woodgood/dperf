@@ -146,6 +146,8 @@ static inline void work_space_tx_flush(struct work_space *ws)
         }
 
         tx = &queue->tx[queue->head];
+        // 批处理发送数据包：将多个数据包一次性发送到指定网卡的发送队列，减少函数调用开销，提升吞吐量。
+        // 硬件加速支持：依赖网卡驱动的底层实现，通过DMA引擎直接将数据包从内存传输到网络，避免CPU拷贝开销。
         n = rte_eth_tx_burst(g_work_space->port_id, g_work_space->queue_id, tx, num);
         queue->head += n;
         if (queue->head == queue->tail) {
