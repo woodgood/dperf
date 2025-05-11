@@ -337,11 +337,12 @@ static inline int server_recv_mbuf(struct work_space *ws, l3_input_t l3_input,
     uint16_t port = ws->port_id;
     uint16_t queue = ws->queue_id;
 
+    // 从端口中批量读取，结果存入mbuf_rx，个数存入nb_rx中
     nb_rx = rte_eth_rx_burst(port, queue, mbuf_rx, RX_BURST_MAX);
     if (nb_rx) {
         if (nb_rx > MBUF_PREFETCH_NUM) {
             for (i = 0; i < MBUF_PREFETCH_NUM; i++) {
-                mbuf_prefetch(mbuf_rx[i]);
+                mbuf_prefetch(mbuf_rx[i]); // 预取
             }
         }
 
