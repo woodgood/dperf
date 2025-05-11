@@ -39,9 +39,9 @@ static void neigh_resolve_gateway_mac_address(struct work_space *ws)
      * 2. broadcast local mac
      * */
     if (ws->port->ipv6) {
-        icmp6_ns_request(ws);
+        icmp6_ns_request(ws); // 端口为ipv6时，使用icmp获取gateway的mac地址
     } else {
-        arp_request_gw(ws);
+        arp_request_gw(ws); // 端口为ipv4时，使用arp获取gateway的mac地址
     }
     work_space_tx_flush(ws);
 }
@@ -58,6 +58,8 @@ static bool neigh_gateway_is_enable(struct work_space *ws)
     return true;
 }
 
+// 用于检查网关邻居状态的核心函数，其核心作用是验证网关的可达性和合法性，
+// 确保数据包能够正确转发至目标网络
 int neigh_check_gateway(struct work_space *ws)
 {
     int i = 0;

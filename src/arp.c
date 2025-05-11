@@ -108,6 +108,7 @@ void arp_request_gw(struct work_space *ws)
     if (ws->neigh_ignore) {
         return;
     }
+    // 对一个范围内的每个ip，做arp请求操作
     for (i = 0; i < ip_range->num; i++) {
         ip = ip_range_get(ip_range, i);
         arp_request_gw2(ws, ip);
