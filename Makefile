@@ -21,7 +21,8 @@ SRCS-y += src/kni.c
 
 RTE_TARGET ?= x86_64-native-linuxapp-gcc
 include $(RTE_SDK)/mk/rte.vars.mk
-CFLAGS += -O3 -g -I./src -Wall
+# CFLAGS += -O3 -g -I./src -Wall
+CFLAGS += -g -I./src -Wall
 CFLAGS += -DHTTP_PARSE
 CFLAGS += $(WERROR_FLAGS) $(CFLAGS_OPT)
 
