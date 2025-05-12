@@ -267,6 +267,7 @@ struct work_space *work_space_new(struct config *cfg, int id)
     if (socket_table_init(ws) < 0) {
         goto err;
     }
+    
     net_stats_init(ws);
 
     if (cfg->server) {

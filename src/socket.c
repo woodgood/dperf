@@ -122,9 +122,11 @@ static struct socket_port_table *socket_port_table_new(struct work_space *ws, st
         for (server_port = st->server_port_min; server_port <= st->server_port_max; server_port++) {
             client_port = port;
             for (server_ip = st->server_ip_min; server_ip <= st->server_ip_max; server_ip++) {
+                // 从table中获取一个socket
                 sk = socket_port_table_get(st, table, client_port, server_port, server_ip);
+                // 初始化socket
                 socket_init(ws, sk, client_ip, htons(client_port), htonl(server_ip), htons(server_port));
-                sp->next++;
+                sp->next++; // 下一个table???
             }
         }
     }

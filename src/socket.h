@@ -105,7 +105,7 @@ struct socket_port_table {
 
 struct socket_pool {
     uint32_t num;
-    uint32_t next;
+    uint32_t next; // socket_table表的索引(base数组的索引)
     struct socket base[0] __attribute__((__aligned__(CACHE_ALIGN_SIZE)));
 };
 
