@@ -24,7 +24,7 @@ __thread struct socket_timer g_timeout_timer;
 
 void socket_timer_init(void)
 {
-    socket_queue_init(&g_retransmit_timer.queue);
+    socket_queue_init(&g_retransmit_timer.queue); // 定时队列初始化
     socket_queue_init(&g_keepalive_timer.queue);
     socket_queue_init(&g_timeout_timer.queue);
 }
@@ -42,5 +42,8 @@ void socket_timeout_timer_expire(struct work_space *ws)
 
     timer = &g_timeout_timer;
     timeout_tsc = (g_config.retransmit_timeout * RETRANSMIT_NUM_MAX) + g_config.keepalive_request_interval;
+ 
+    // timer中的定时队列中，有超时(timeout_tsc)的socket，
+    // 则将其从定时队列中删除，并执行参数中的超时函数
     socket_timer_run(ws, timer, timeout_tsc, socket_timeout_handler);
 }

@@ -91,7 +91,9 @@ static void work_space_get_port(struct work_space *ws)
     struct netif_port *port = NULL;
     struct vxlan *vxlan = NULL;
 
+    // ws->id线程id
     port = config_port_get(cfg, ws->id, &queue_id);
+    // 工作空间对象，设置队列id、端口和端口id
     ws->queue_id = queue_id;
     ws->port = port;
     ws->port_id = port->id;
@@ -220,7 +222,7 @@ struct work_space *work_space_new(struct config *cfg, int id)
     g_work_space_all[id] = ws;
     ws->server = cfg->server;
     ws->vlan_id = cfg->vlan_id;
-    ws->id = id;
+    ws->id = id; // 线程id
     ws->ipv6 = cfg->af == AF_INET6;
     ws->http = cfg->http;
     ws->flood = cfg->flood;
@@ -229,7 +231,7 @@ struct work_space *work_space_new(struct config *cfg, int id)
     ws->disable_ack = cfg->disable_ack;
     ws->send_window = (uint32_t)cfg->mss * (uint32_t)cfg->send_window;
     ws->payload_size = cfg->payload_size[id];
-    ws->cfg = cfg;
+    ws->cfg = cfg; // 工作空间用成员指针cfg，记录全局配置对象
     ws->tos = cfg->tos;
     ws->tx_queue.tx_burst = cfg->tx_burst;
     work_space_get_port(ws);
@@ -239,6 +241,7 @@ struct work_space *work_space_new(struct config *cfg, int id)
         goto err;
     }
 
+    // 根据配置文件初始化tcp和udp接口
     if (tcp_init(ws) < 0) {
         printf("tcp_init error");
         goto err;
@@ -249,16 +252,22 @@ struct work_space *work_space_new(struct config *cfg, int id)
         goto err;
     }
 
+    // 用于初始化 LLDP（Link Layer Discovery Protocol，链路层发现协议）的核心函数，
+    // 其核心作用是启用并配置 LLDP 协议，使网络设备能够自动发现并交换链路层信息
     lldp_init(ws);
+    
     if (work_space_open_log(ws) < 0) {
         goto err;
     }
 
     work_space_init_time(ws);
+    
     cpuload_init(&ws->load);
+    
     if (socket_table_init(ws) < 0) {
         goto err;
     }
+    
     net_stats_init(ws);
 
     if (cfg->server) {

@@ -157,6 +157,12 @@ void lldp_init(struct work_space *ws)
 {
     struct netif_port *port = ws->port;
 
+    // 功能：将多个物理网卡（Physical Port）绑定为一个逻辑网卡（Logical Port），提供高可用性（HA）和负载均衡（LB）能力。
+    // 常见模式：
+    // 轮询（Round Robin）：数据包依次通过所有从属端口发送。
+    // 主备（Active-Backup）：仅主端口活跃，故障时切换到备份端口。
+    // 广播（Broadcast）：所有端口发送相同数据包（冗余性最高）。
+    // 动态链接聚合（802.3ad）：基于链路状态动态分配流量。
     if (port->bond && (port->bond_mode == BONDING_MODE_8023AD)) {
         ws->lldp = true;
         lldp_init_packet(ws);

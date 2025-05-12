@@ -593,28 +593,28 @@ static int config_parse_port(int argc, char *argv[], void *data)
             printf("bad bond \"%s\"\n", argv[1]);
             return -1;
         }
-    } else if (strlen(argv[1]) == PCI_LEN) {
+    } else if (strlen(argv[1]) == PCI_LEN) { // 0000:02:06.0
         strcpy(port->pci, argv[1]);
         port->pci_num = 1;
     } else {
         return -1;
     }
 
-    if ((af_local = config_parse_ip(argv[2], &port->local_ip)) < 0) {
+    if ((af_local = config_parse_ip(argv[2], &port->local_ip)) < 0) { // 192.168.217.136
         return -1;
     }
 
-    if ((af_gateway = config_parse_ip(argv[3], &port->gateway_ip)) < 0) {
+    if ((af_gateway = config_parse_ip(argv[3], &port->gateway_ip)) < 0) { // 192.168.217.2
         return -1;
     }
 
-    if (af_local != af_gateway) {
+    if (af_local != af_gateway) { // IP地址协议不同
         return -1;
     }
     port->ipv6 = af_local == AF_INET6;
 
     if (argc == 5) {
-        if (eth_addr_init(&port->gateway_mac, argv[4]) != 0) {
+        if (eth_addr_init(&port->gateway_mac, argv[4]) != 0) { // 使用argv[4]初始化mac地址
             return -1;
         }
     }
@@ -1711,8 +1711,8 @@ static int config_port_queue_num(struct config *cfg)
 
 struct netif_port *config_port_get(struct config *cfg, int thread_id, int *p_queue_id)
 {
-    int queue_num = config_port_queue_num(cfg);
-    int queue_id = thread_id % queue_num;
+    int queue_num = config_port_queue_num(cfg); // 例如:8核cpu，2个端口。则有8/2=4个队列
+    int queue_id = thread_id % queue_num;// 8个线程分配到4个队列的哪个队列id上
     int port_idx = thread_id / queue_num;
 
     if (p_queue_id) {
@@ -1892,7 +1892,7 @@ static int config_check_port(struct config *cfg)
             }
 
             if (config_check_port_pci(port0, port1) < 0) {
-                printf("duplicate pci\n");
+                printf("duplicate pci\n"); // 重复的pci字符串设备
                 return -1;
             }
         }
@@ -2679,6 +2679,7 @@ int config_parse(int argc, char **argv, struct config *cfg)
     while ((opt = getopt_long_only(argc, argv, optstr, g_options, NULL)) != -1) {
         switch (opt) {
             case 'c':
+                // 根据g_config_keywords表，解析配置文件。将解析结构设置到cfg中
                 if (config_keyword_parse(optarg, g_config_keywords, cfg) < 0) {
                     return -1;
                 }
@@ -2751,6 +2752,7 @@ int config_parse(int argc, char **argv, struct config *cfg)
         return -1;
     }
 
+    // 检查slow_start配置是否有效。没有设置时，设置为默认值
     if (config_check_slow_start(cfg) < 0) {
         return -1;
     }

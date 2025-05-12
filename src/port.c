@@ -299,8 +299,14 @@ static int port_start(struct netif_port *port)
             }
         }
 
+        // 启用网卡多播包接收功能的一个接口
+        // 该函数允许网卡接收所有多播流量（而不仅仅是已加入的多播组流量），适用于需要全局监听多播数据的场景
         rte_eth_allmulticast_enable(port_id);
+        // 在普通模式下，网卡仅接收目标 MAC 地址为本机或广播地址的数据包，其他数据包会被丢弃。
+        // 启用混杂模式后，网卡会接收所有流经该接口的数据包，无论其目标地址如何
         rte_eth_promiscuous_enable(port_id);
+        // 重置以太网设备统计计数器
+        // 将指定以太网端口的所有统计数据（如接收/发送包数、字节数、错误计数等）重置为 0
         rte_eth_stats_reset(port_id);
 
         return 0;

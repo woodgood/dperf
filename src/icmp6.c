@@ -256,6 +256,7 @@ void icmp6_ns_request(struct work_space *ws)
         return;
     }
 
+    // 构建icmp包，并发送
     icmp6_ns_eth_hdr_push(ws->port, m);
     icmp6_ns_ip6_hdr_push(ws->port, m);
     icmp6_ns_hdr_push(ws->port, m);
@@ -264,7 +265,12 @@ void icmp6_ns_request(struct work_space *ws)
 
 static void icmp6_send(struct work_space *ws, struct rte_mbuf *m)
 {
+    // icmp包是neighbor包
+    // 动态链接聚合（802.3ad）
     if (icmp6_is_neigh(m) && port_is_bond4(ws->port)) {
+        // bond_broadcast 是 DPDK（Data Plane Development Kit） 中用于
+        // 链路聚合（Link Aggregation）或网卡绑定（Bonding）的一种模式，
+        //其核心作用是通过广播机制将数据包同时发送到多个物理网卡，以提高网络的冗余性和可靠性。
         bond_broadcast(ws, m);
     }
 
