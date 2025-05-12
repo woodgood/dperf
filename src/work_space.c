@@ -222,7 +222,7 @@ struct work_space *work_space_new(struct config *cfg, int id)
     g_work_space_all[id] = ws;
     ws->server = cfg->server;
     ws->vlan_id = cfg->vlan_id;
-    ws->id = id;// 线程id
+    ws->id = id; // 线程id
     ws->ipv6 = cfg->af == AF_INET6;
     ws->http = cfg->http;
     ws->flood = cfg->flood;
@@ -231,7 +231,7 @@ struct work_space *work_space_new(struct config *cfg, int id)
     ws->disable_ack = cfg->disable_ack;
     ws->send_window = (uint32_t)cfg->mss * (uint32_t)cfg->send_window;
     ws->payload_size = cfg->payload_size[id];
-    ws->cfg = cfg;
+    ws->cfg = cfg; // 工作空间用成员指针cfg，记录全局配置对象
     ws->tos = cfg->tos;
     ws->tx_queue.tx_burst = cfg->tx_burst;
     work_space_get_port(ws);
@@ -255,12 +255,15 @@ struct work_space *work_space_new(struct config *cfg, int id)
     // 用于初始化 LLDP（Link Layer Discovery Protocol，链路层发现协议）的核心函数，
     // 其核心作用是启用并配置 LLDP 协议，使网络设备能够自动发现并交换链路层信息
     lldp_init(ws);
+    
     if (work_space_open_log(ws) < 0) {
         goto err;
     }
 
     work_space_init_time(ws);
+    
     cpuload_init(&ws->load);
+    
     if (socket_table_init(ws) < 0) {
         goto err;
     }

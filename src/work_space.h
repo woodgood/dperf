@@ -63,7 +63,7 @@ struct client_launch {
 
 struct work_space {
     /* read mostly */
-    uint8_t id;
+    uint8_t id; // 线程id 返回当前线程所绑定的逻辑核的 ID
     uint8_t ipv6:1;
     uint8_t server:1;
     uint8_t kni:1;
