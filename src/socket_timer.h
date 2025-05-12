@@ -147,7 +147,7 @@ static inline void socket_timer_run(struct work_space *ws, struct socket_timer *
 {
     struct socket *sk = NULL;
     struct socket_queue *sq = &(st->queue);
-    uint64_t now_tsc = work_space_tsc(ws);
+    uint64_t now_tsc = work_space_tsc(ws); // 工作空间的当前时间
 
     while ((sk = socket_queue_first(sq)) != NULL) {
         if (sk->timer_tsc + (timeout) <= now_tsc) {
