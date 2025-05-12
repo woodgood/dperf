@@ -25,8 +25,10 @@
 #include <string.h>
 #include <rte_cycles.h>
 
-static uint64_t g_tsc_per_tick = 0;
-uint64_t g_tsc_per_second = 0;
+// tsc 是 Time Stamp Counter（时间戳计数器） 的缩写，是 x86/x64 
+// 架构处理器中的一个 64 位寄存器，用于提供高精度的计时功能。
+static uint64_t g_tsc_per_tick = 0; // 每tick有n个tsc
+uint64_t g_tsc_per_second = 0; // hz , 每秒n个tsc
 
 void tick_wait_init(struct timeval *last_tv)
 {
@@ -89,7 +91,9 @@ void tick_init(int ticks_per_sec)
 
     hz = tick_get_hz();
     g_tsc_per_second = hz;
-    g_tsc_per_tick = hz / ticks_per_sec;
+    
+    // ticks_per_sec 每秒n个ticks, 由配置文件设置
+    g_tsc_per_tick = hz / ticks_per_sec; 
 }
 
 static void tsc_time_init(struct tsc_time *tt, uint64_t now, uint64_t interval)
@@ -101,10 +105,11 @@ static void tsc_time_init(struct tsc_time *tt, uint64_t now, uint64_t interval)
 
 void tick_time_init(struct tick_time *tt)
 {
+    // 通过 RDTSC（Read Time-Stamp Counter）指令读取 TSC 的值(tsc 是 Time Stamp Counter（时间戳计数器） )。
     uint64_t now = rte_rdtsc();
 
     memset(tt, 0, sizeof(struct tick_time));
-    tsc_time_init(&tt->tick, now, g_tsc_per_tick);
-    tsc_time_init(&tt->ms100, now,  g_tsc_per_second / 10);
-    tsc_time_init(&tt->second, now, g_tsc_per_second);
+    tsc_time_init(&tt->tick, now, g_tsc_per_tick); // tick定时器
+    tsc_time_init(&tt->ms100, now,  g_tsc_per_second / 10); //100ms定时器
+    tsc_time_init(&tt->second, now, g_tsc_per_second); // 秒级定时器
 }
