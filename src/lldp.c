@@ -191,9 +191,12 @@ void lldp_send(struct work_space *ws)
             return;
         }
 
+        // lldp为m后面,追加的size长度的lldp_packet
         lldp = (struct lldp_packet *)mbuf_push_data(m, size);
+        // 赋值lldp
         memcpy(lldp, &g_lldp_packet, size);
 
+        // 发送带lldp_packet的包
         work_space_tx_send(ws, m);
     }
 
